@@ -2,12 +2,12 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-02-26 16:09:13
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-02 23:44:40
+ * @LastEditTime: 2023-03-14 22:48:39
  * @FilePath: \LCMIM\TIM-IM\timim\src\views\layout\MainLayout.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <div class="body-tag">
+  <div class="body-bag">
     <el-container class="main-layout">
       <el-aside width="70px" class="side-edge">
         <el-container class="full-height">
@@ -17,7 +17,7 @@
               placement="right-start"
               popper-class="no-padding"
               :visible-arrow="true"
-              ><AccountCard/>
+              ><AccountCard />
               <template #reference>
                 <div class="userlogo">
                   <img src="../../assets/img-jisoo/th8.jpg" alt="" />
@@ -80,10 +80,14 @@
           </el-footer>
         </el-container>
       </el-aside>
-      <el-main class="no-padding" style="background: white; padding:0 ; overflow: hidden;">
+      <el-main
+        class="no-padding"
+        style="background: white; padding: 0; overflow: hidden"
+      >
         <slot name="container"></slot>
       </el-main>
     </el-container>
+
     <!-- 用户卡片 -->
 
     <!-- 语音消息提示 -->
@@ -140,7 +144,7 @@ const idx = defineProps({ type: Number, default: 0 });
           transform: rotate(360deg);
         }
       }
-      
+
       .user-status {
         text-align: center;
         margin-top: 10px;
@@ -221,9 +225,8 @@ const idx = defineProps({ type: Number, default: 0 });
   }
 }
 
-
 /* 主题背景图片 */
-.body-tag {
+.body-bag {
   width: 100%;
   height: 100%;
   position: absolute;
