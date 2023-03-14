@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-02-28 21:49:41
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-05 17:06:46
+ * @LastEditTime: 2023-03-14 23:35:32
  * @FilePath: \LCMIM\TIM-IM\timim\src\views\message\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -78,8 +78,8 @@
                 <p class="main-menu">
                     <span class="title">消息记录({{ topItems.length }})</span>
                     <span class="title">未读</span>
-                  </p>
-                  <el-scrollbar ref="menusScrollbar" :native="false" height="500px" tag="setction">
+                </p>
+                  <el-scrollbar ref="menusScrollbar" :native="false" height="100%" tag="setction">
                 <el-main class="main">
                   
                   <!-- 对话列表 -->
@@ -232,12 +232,21 @@ const topItems = reactive([
     index_name: 9,
     avatar: require("@/assets/img-jisoo/th9.jpg"),
   },
+  {
+    remark_name: "勒布朗",
+    index_name: 10,
+    avatar: require("@/assets/img-jisoo/th1.jpg"),
+  }
 ]);
 </script>
 
 <style lang="scss" scoped>
 ::v-deep.el-scrollbar__wrap {
   overflow-x: hidden;
+}
+.full-height {
+  height: 100%;
+  overflow: hidden;
 }
 .aside-box {
   position: relative;
@@ -347,7 +356,7 @@ const topItems = reactive([
   display: block;
   flex: 1;
   flex-basis: auto;
-  overflow: auto;
+  overflow: hidden;
   .empty-data {
     text-align: center;
     padding-top: 40px;
