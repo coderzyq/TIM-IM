@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-06 22:43:07
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-09 00:28:37
+ * @LastEditTime: 2023-03-15 10:41:51
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\editor\MeEdit.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -37,11 +37,11 @@
       </ul>
       <ul>
         <li>
-          <i class="iconfont icon-daima" />
+          <i class="iconfont icon-shipintonghua" />
           <p class="tip-title">视频通话</p>
         </li>
         <li>
-          <i class="iconfont icon-daima" />
+          <i class="iconfont icon-voice_calls1" />
           <p class="tip-title">语音通话</p>
         </li>
         <p class="text-tips no-select">
