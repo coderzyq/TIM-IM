@@ -78,6 +78,27 @@
 import { ref, reactive } from "vue";
 import PanelHeader from "./PanelHeader.vue";
 import MeEdit from "@/components/editor/MeEdit.vue";
+
+defineProps({
+  params: {
+    type: Object,
+    default: function() {
+      return {
+        //消息来源 1.好友私信，2.群聊
+        talk_type: 0,
+        //消息接收者ID
+        receiver_id: 0,
+        nickname: ""
+      }
+    }
+  },
+
+  //用户是否在线
+  isOnline: {
+    type: Boolean,
+    default: true  
+  }
+})
 //记录加载相关参数
 const loadRecord = reactive({ status: 0, minRecord: 0 });
 //多选相关操作

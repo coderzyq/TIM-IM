@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-02-28 21:49:41
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-14 23:35:32
+ * @LastEditTime: 2023-03-27 01:00:01
  * @FilePath: \LCMIM\TIM-IM\timim\src\views\message\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -47,11 +47,12 @@
                 </div>
               </el-header>
               <!-- 置顶栏 -->
-              <header class="subheader">
+              <header class="subheader" v-show="loadStatusCom.value === 3 && topItemsCom.value.length > 0">
                 <div
                   class="top-item"
-                  v-for="item in topItems"
-                  :key="item.index_name"
+                  v-for="(item, index) in topItemsCom.value"
+                  :key="index"
+                  @click="clickTab(item.index_name)"
                 >
                   <el-tooltip
                     placement="top-start"
@@ -76,16 +77,17 @@
               </header>
               <el-main class="main">
                 <p class="main-menu">
-                    <span class="title">消息记录({{ topItems.length }})</span>
+                    <span class="title">消息记录({{ talkNumCom.value }})</span>
                     <span class="title">未读</span>
                 </p>
                   <el-scrollbar ref="menusScrollbar" :native="false" height="100%" tag="setction">
                 <el-main class="main">
                   
                   <!-- 对话列表 -->
-                  <div
-                    v-for="item in topItems"
-                    :key="item.index_name"
+                  <template v-if="loadStatusCom.value === 3">
+                    <div
+                    v-for="(item, index) in talkItemsCom.value"
+                    :key="index"
                     class="talk-item pointer"
                   >
                     <div class="avatar-box">
@@ -110,22 +112,27 @@
                         </div>
                       </div>
                       <div class="card-content">
-                        <span class="online">[在线]&nbsp;</span>
+                        <span class="online" :class="{'online-color': item.is_online === 1}">[{{item.is_online == 1 ? "在线" : "离线"}}]&nbsp;</span>
                         <span>[图片信息]</span>
                       </div>
                     </div>
                   </div>
+                  </template>
+                  <!-- 对话列表栏 -->
                 </el-main>
               </el-scrollbar>
               </el-main>
-              <!-- 对话列表栏 -->
+              
               
             </el-container>
           </el-aside>
           <!-- 聊天面板容器 -->
           <el-main class="ov-hidden full-height no-padding" style="padding: 0;">
             <welcome-module v-if="false"></welcome-module>
-            <talk-panel></talk-panel>
+            <talk-panel 
+              :params="params"
+              
+            ></talk-panel>
           </el-main>
         </el-container>
       </template>
@@ -138,11 +145,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, nextTick, computed } from "vue";
 import MainLayout from "@/views/layout/MainLayout";
 import WelcomeModule from "@/components/layout/WelcomeModule"
 import uTime from "./uTime.vue";
 import TalkPanel from '@/components/chat/panel/TalkPanel.vue'
+import useStore from "@/store"
+import { storeToRefs } from "pinia";
+import {findTalkIndex} from "@/utils/talk"
 //查询关键词
 const input = ref("");
 //自定义指令
@@ -185,59 +195,66 @@ const triggerSubMenu = (type) => {
 };
 
 //置顶栏
-//用户数量
-const topItems = reactive([
-  {
-    remark_name: "jisoo",
-    index_name: 1,
-    avatar: require("@/assets/img-jisoo/th1.jpg"),
-  },
-  {
-    remark_name: "金智秀",
-    index_name: 2,
-    avatar: require("@/assets/img-jisoo/th2.jpg"),
-  },
-  {
-    remark_name: "1111",
-    index_name: 3,
-    avatar: require("@/assets/img-jisoo/th3.jpg"),
-  },
-  {
-    remark_name: "式样",
-    index_name: 4,
-    avatar: require("@/assets/img-jisoo/th4.jpg"),
-  },
-  {
-    remark_name: "kobe",
-    index_name: 5,
-    avatar: require("@/assets/img-jisoo/th5.jpg"),
-  },
-  {
-    remark_name: "James",
-    index_name: 6,
-    avatar: require("@/assets/img-jisoo/th6.jpg"),
-  },
-  {
-    remark_name: "curry",
-    index_name: 7,
-    avatar: require("@/assets/img-jisoo/th7.jpg"),
-  },
-  {
-    remark_name: "Durant",
-    index_name: 8,
-    avatar: require("@/assets/img-jisoo/th8.jpg"),
-  },
-  {
-    remark_name: "欧文",
-    index_name: 9,
-    avatar: require("@/assets/img-jisoo/th9.jpg"),
-  },
-  {
-    remark_name: "勒布朗",
-    index_name: 10,
-    avatar: require("@/assets/img-jisoo/th1.jpg"),
+//聊天面板传递的参数
+const params = reactive({
+  talk_type: 0,
+  receiver_id: 0,
+  nickname: ""
+})
+//切换聊天面板
+const clickTab = (index_name) => {
+  let index = findTalkIndex(index_name)
+  if (index === -1) return
+  let item = topItems[index_name - 1]
+  // let [talk_type, receiver_id] = index_name
+  let nickname = item.remark_name ? item.remark_name : item.index_name
+  params.value = {
+    talk_type,
+    receiver_id,
+    nickname,
+    // is_robot: item.is_robot
   }
-]);
+  nextTick(() => {
+    //提交事件，更新聊天面板
+    // if (index_name === topItems.index_name) {
+      
+    // }
+  })
+}
+//useStore
+const store = useStore()
+const {loadStatus, items, unreadNum, talkItems, topItems, talkNum} = storeToRefs(store.talk)
+//加载类型
+const loadStatusCom = computed(() => loadStatus)
+//用户数量
+const talksCom = computed(() => items)
+//会话列表(改变state中的)
+// const itemsCom = computed(() => items)
+//消息未读数总计
+const unreadNumCom = computed(() => unreadNum)
+//消息总数(对话列表)
+const talkItemsCom = computed(() => talkItems)
+//过滤所有置顶对话列表(用户数量)
+const topItemsCom = computed(() => topItems)
+//消息记录数量
+const talkNumCom = computed(() => talkNum)
+//对话索引
+const index_name = computed(() => store.dialogue.index_name)
+//计算置顶栏目的高度
+const subheaderPx = computed(() => {
+  const n = 7 //一排能显示的用户数
+  const num = topItems.length
+  let len = 60
+  if (num > n) {
+    len = (Math.floor(num / n) + (num % n > 0 ? 1 : 0)) * len
+  }
+  return `${len}px`
+})
+//当前对话好友在线状态
+const isFriendOnline = computed(() => {
+  let index = findTalkIndex(index_name)
+  return index >= 0 && talksCom.value[index].is_online === "在线"
+})
 </script>
 
 <style lang="scss" scoped>
@@ -491,8 +508,12 @@ const topItems = reactive([
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        .online {
+        span:first-child {
+          margin-right: 5px;
+        }
+        .online-color {
           color: #8bc34a;
+          font-weight: 300;
         }
       }
     }

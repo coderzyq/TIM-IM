@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-06 22:43:07
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-15 10:41:51
+ * @LastEditTime: 2023-03-18 11:42:02
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\editor\MeEdit.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,7 +11,7 @@
     <el-header class="toolbar" height="35px">
       <ul>
         <li>
-          <i class="iconfont icon-icon_im_face" style="font-size: 15px"></i>
+          <i class="iconfont icon-biaoqing" style="font-size: 15px"></i>
           <p class="tip-title">表情符号</p>
         </li>
         <li>
@@ -135,7 +135,7 @@ const interval = ref(1000);
         .tip-title {
           display: none;
           position: absolute;
-          top: 25px;
+          top: 30px;
           left: 0px;
           height: 26px;
           line-height: 26px;
