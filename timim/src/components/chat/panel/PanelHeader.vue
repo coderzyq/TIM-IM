@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-05 18:05:42
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-06 22:19:35
+ * @LastEditTime: 2023-03-29 23:40:56
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\chat\panel\PanelHeader.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -14,7 +14,7 @@
         :class="{ red: params.talk_type === 0 }"
         v-show="params.is_robot === 0"
       >
-        {{ params.talk_type == 0 ? "好友" : "群组" }}
+        {{ params.talk_type == 1 ? "好友" : "群组" }}
       </span>
       <span class="nickname">{{ params.nickname }}</span>
       <span class="num" v-show="isOnline">{{ groupNum }}</span>
@@ -55,8 +55,8 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-defineProps({
+import { reactive, ref, watch } from "vue";
+const props = defineProps({
   keyboard: {
     type: [Boolean, Number],
     default: false,
@@ -65,7 +65,7 @@ defineProps({
     type: Object,
     default: () => {
       return {
-        talk_type: 0,
+        talk_type: 1,
         receiver_id: 0,
         params: 0,
         nickname: 0,
@@ -79,7 +79,7 @@ defineProps({
 });
 const params = reactive({
   is_robot: 0,
-  talk_type: 0,
+  talk_type: 1,
   receiver_id: 0,
   params: 0,
   nickname: "jisoo",
@@ -87,6 +87,17 @@ const params = reactive({
 const isOnline = ref(true);
 const isKeyboard = ref(false);
 const groupNum = ref(1);
+//设置配置数据
+const setParamsData = (object) => {Object.assign(params, object)}
+
+watch(
+  () => props.data,
+  (value) => {
+    console.log(value);
+    setParamsData(value)
+    // console.log(dat);
+  } 
+)
 </script>
 
 <style lang="scss" scoped>

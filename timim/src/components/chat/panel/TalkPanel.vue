@@ -2,7 +2,7 @@
   <el-container class="ov-hidden full-height">
     <el-container>
       <!-- 聊天面板头部 -->
-      <panel-header :data="{}" :online="true"></panel-header>
+      <panel-header :data="loadChatRecords()" :online="true"></panel-header>
       <!-- 聊天信息内容面板 -->
       <el-main class="main-box no-padding">
         <div id="weChatPanel" class="talks-container wechatScrollbar">
@@ -75,17 +75,18 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch, computed, watchEffect } from "vue";
 import PanelHeader from "./PanelHeader.vue";
 import MeEdit from "@/components/editor/MeEdit.vue";
+import useDialogueStore from "@/store/module/dialogue"
 
-defineProps({
+const talkProps = defineProps({
   params: {
     type: Object,
-    default: function() {
+    default: () => {
       return {
         //消息来源 1.好友私信，2.群聊
-        talk_type: 0,
+        talk_type: 1,
         //消息接收者ID
         receiver_id: 0,
         nickname: ""
@@ -111,6 +112,24 @@ const keyboardEvent = reactive({ isShow: false, time: 0 });
 const findChatRecord = ref(false);
 //置顶按钮是否显示
 const tipsBoard = ref(false);
+const useDialog = useDialogueStore()
+//消息记录
+const recordCom = computed(() => useDialog.talk_type)
+//对话索引
+const indexNameCom = computed(() => useDialog.receiver_id)
+//昵称
+const nicknameCom = computed(() => useDialog.nickname)
+//未读消息
+//加载用户聊天详情信息
+const loadChatRecords = () => ({
+  receiver_id: indexNameCom.value,
+    talk_type: recordCom.value,
+    nickname: nicknameCom.value
+})
+
+watchEffect(
+  () => loadChatRecords()
+)
 </script>
 
 <style lang="scss" scoped>

@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-25 16:59:10
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-26 22:37:36
+ * @LastEditTime: 2023-03-29 23:42:27
  * @FilePath: \LCMIM\TIM-IM\timim\src\store\module\talk.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,61 +13,61 @@ const useTalkSotre = defineStore("talkId", {
         //会话列表
         items: [{
                 remark_name: "jisoo",
-                index_name: 1,
+                index_name: "1_0",
                 avatar: require("@/assets/img-jisoo/th1.jpg"),
                 is_online: 1
             },
             {
                 remark_name: "金智秀",
-                index_name: 1,
+                index_name: "1_1",
                 avatar: require("@/assets/img-jisoo/th2.jpg"),
                 is_online: 1
             },
             {
                 remark_name: "粉墨",
-                index_name: 1,
+                index_name: "1_2",
                 avatar: require("@/assets/img-jisoo/th3.jpg"),
                 is_online: 0
             },
             {
                 remark_name: "式样",
-                index_name: 1,
+                index_name: "1_3",
                 avatar: require("@/assets/img-jisoo/th4.jpg"),
                 is_online: 1
             },
             {
                 remark_name: "kobe",
-                index_name: 1,
+                index_name: "1_4",
                 avatar: require("@/assets/img-jisoo/th5.jpg"),
                 is_online: 0
             },
             {
                 remark_name: "James",
-                index_name: 1,
+                index_name: "1_5",
                 avatar: require("@/assets/img-jisoo/th6.jpg"),
                 is_online: 1
             },
             {
                 remark_name: "curry",
-                index_name: 1,
+                index_name: "1_6",
                 avatar: require("@/assets/img-jisoo/th7.jpg"),
                 is_online: 0
             },
             {
                 remark_name: "Durant",
-                index_name: 1,
+                index_name: "1_7",
                 avatar: require("@/assets/img-jisoo/th8.jpg"),
                 is_online: 1
             },
             {
                 remark_name: "欧文",
-                index_name: 1,
+                index_name: "1_8",
                 avatar: require("@/assets/img-jisoo/th9.jpg"),
                 is_online: 1
             },
             {
                 remark_name: "勒布朗",
-                index_name: 1,
+                index_name: "1_9",
                 avatar: require("@/assets/img-jisoo/th1.jpg"),
                 is_online: 0
             }

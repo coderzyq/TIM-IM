@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-02-28 21:49:41
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-27 01:00:01
+ * @LastEditTime: 2023-03-29 23:33:13
  * @FilePath: \LCMIM\TIM-IM\timim\src\views\message\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -86,9 +86,10 @@
                   <!-- 对话列表 -->
                   <template v-if="loadStatusCom.value === 3">
                     <div
-                    v-for="(item, index) in talkItemsCom.value"
+                    v-for="(item, index) in talksCom.value"
                     :key="index"
                     class="talk-item pointer"
+                    @click="clickTab(item.index_name)"
                   >
                     <div class="avatar-box">
                       <span v-show="!item.avatar">{{
@@ -151,6 +152,7 @@ import WelcomeModule from "@/components/layout/WelcomeModule"
 import uTime from "./uTime.vue";
 import TalkPanel from '@/components/chat/panel/TalkPanel.vue'
 import useStore from "@/store"
+// import useDialogueStore from "@/store/module/"
 import { storeToRefs } from "pinia";
 import {findTalkIndex} from "@/utils/talk"
 //查询关键词
@@ -183,7 +185,6 @@ const subMenu = ref(false);
 //工具栏隐藏功能
 const closeSubMenu = () => {
   subMenu.value = false;
-  console.log(subMenu.value);
 };
 //工具栏事件
 const triggerSubMenu = (type) => {
@@ -196,31 +197,12 @@ const triggerSubMenu = (type) => {
 
 //置顶栏
 //聊天面板传递的参数
-const params = reactive({
+let params = reactive({
   talk_type: 0,
   receiver_id: 0,
   nickname: ""
 })
-//切换聊天面板
-const clickTab = (index_name) => {
-  let index = findTalkIndex(index_name)
-  if (index === -1) return
-  let item = topItems[index_name - 1]
-  // let [talk_type, receiver_id] = index_name
-  let nickname = item.remark_name ? item.remark_name : item.index_name
-  params.value = {
-    talk_type,
-    receiver_id,
-    nickname,
-    // is_robot: item.is_robot
-  }
-  nextTick(() => {
-    //提交事件，更新聊天面板
-    // if (index_name === topItems.index_name) {
-      
-    // }
-  })
-}
+
 //useStore
 const store = useStore()
 const {loadStatus, items, unreadNum, talkItems, topItems, talkNum} = storeToRefs(store.talk)
@@ -228,8 +210,6 @@ const {loadStatus, items, unreadNum, talkItems, topItems, talkNum} = storeToRefs
 const loadStatusCom = computed(() => loadStatus)
 //用户数量
 const talksCom = computed(() => items)
-//会话列表(改变state中的)
-// const itemsCom = computed(() => items)
 //消息未读数总计
 const unreadNumCom = computed(() => unreadNum)
 //消息总数(对话列表)
@@ -255,6 +235,28 @@ const isFriendOnline = computed(() => {
   let index = findTalkIndex(index_name)
   return index >= 0 && talksCom.value[index].is_online === "在线"
 })
+//切换聊天面板
+const clickTab = (index_name) => {
+  let index = findTalkIndex(index_name)
+  if (index === -1) return
+  let item = talksCom.value.value[index]
+  let [talk_type, receiver_id] = index_name.split('_')
+  let nickname = item.remark_name ? item.remark_name : item.index_name
+  params = {
+    talk_type,
+    receiver_id,
+    nickname,
+    // is_robot: item.is_robot
+  }
+  console.log(params);
+  store.dialogue.UPDATE_DIALOGUE_MESSAGE(params)
+  nextTick(() => {
+    //提交事件，更新聊天面板
+    // if (index_name === topItems.index_name) {
+      
+    // }
+  })
+}
 </script>
 
 <style lang="scss" scoped>
