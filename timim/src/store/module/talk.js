@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-25 16:59:10
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-29 23:42:27
+ * @LastEditTime: 2023-04-10 23:46:09
  * @FilePath: \LCMIM\TIM-IM\timim\src\store\module\talk.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -102,12 +102,17 @@ const useTalkSotre = defineStore("talkId", {
         //设置对话列表
         SET_TALK_ITEMS: (state, resource) => {
             state.items = resource.items
+
         },
         //更新呢对话节点
-        UPDATE_TALK_ITEM: (state, resource) => {
-            for (const iterator of state.items) {
+        UPDATE_TALK_ITEM(resource) {
+            console.log(this.items);
+            console.log(resource);
+            for (const iterator of this.items) {
                 if (iterator.index_name === resource.index_name) {
                     Object.assign(iterator, resource)
+                    console.log(resource);
+                    console.log(iterator);
                     break
                 }
             }

@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-06 22:43:07
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-18 11:42:02
+ * @LastEditTime: 2023-04-10 23:03:41
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\editor\MeEdit.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -83,6 +83,8 @@
         rows="6"
         placeholder="你想要聊点什么呢？"
         v-model.trim="editorText"
+        @input="emitInputEvent($event)"
+        @keydown="keydownEvent($event)"
       ></textarea>
     </el-main>
   </el-container>
@@ -90,8 +92,8 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-//当前编辑的内容
-const editorText = ref("");
+const emit = defineEmits(['keyboard-event', 'send'])
+
 //图片查看器相关信息
 const imageViewer = reactive({ isShow: false, file: null });
 const codeBlock = reactive({ isShow: false, editMode: true });
@@ -102,6 +104,42 @@ const recorder = ref(false);
 const sendtime = ref(0);
 //发送间隔时间（默认1秒）
 const interval = ref(1000);
+//当前编辑的内容
+const editorText = ref("");
+// const props = defineProps({
+//   // editorText: String,
+//   send: Object,
+//   KeyboardEvent: Object,
+//   trim: {}
+// })
+
+//文字输入事件
+const emitInputEvent = (e) => {
+  // emit()
+  emit('keyboard-event', e.target.value)
+}
+//键盘按下监听事件
+const keydownEvent = (e) => {
+  if(e.keyCode === 13 && editorText.value === '') {
+    e.preventDefault()
+  }
+  //回车发送消息
+  if(e.keyCode === 13) {
+  // if(e.keyCode === 13 && e.shiftKey === false && editorText.value === '') {
+    let currentTime = new Date().getTime()
+    if(sendtime.value > 0) {
+      //判断1秒内只能发一条消息
+      if(currentTime - sendtime.value < interval.value) {
+        e.preventDefault()
+        return false
+      }
+    }
+    emit('send', editorText.value)
+    editorText.value = ""
+    sendtime.value = currentTime
+    e.preventDefault()
+  }
+}
 </script>
 
 <style lang="scss" scoped>

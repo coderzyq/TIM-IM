@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-05 18:05:42
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-29 23:40:56
+ * @LastEditTime: 2023-04-02 15:32:26
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\chat\panel\PanelHeader.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,16 +11,16 @@
     <div class="module left-module">
       <span
         class="icon-bage"
-        :class="{ red: params.talk_type === 0 }"
+        :class="{ 'red-color': params.talk_type === 1 }"
         v-show="params.is_robot === 0"
       >
         {{ params.talk_type == 1 ? "好友" : "群组" }}
       </span>
       <span class="nickname">{{ params.nickname }}</span>
-      <span class="num" v-show="isOnline">{{ groupNum }}</span>
+      <span class="num" v-show="isOnline">({{ groupNum }})</span>
     </div>
     <div
-      v-show="(params.talk_type === 0) & (params.is_robot === 0)"
+      v-show="(params.talk_type === 1) & (params.is_robot === 0)"
       class="module center-module"
     >
       <p class="online">
@@ -84,19 +84,25 @@ const params = reactive({
   params: 0,
   nickname: "jisoo",
 });
-const isOnline = ref(true);
+const isOnline = ref(false);
 const isKeyboard = ref(false);
 const groupNum = ref(1);
 //设置配置数据
 const setParamsData = (object) => {Object.assign(params, object)}
-
+//监听用户是否在线？
+const setOnlineStatus = (value) => isOnline.value = value
 watch(
   () => props.data,
   (value) => {
-    console.log(value);
     setParamsData(value)
     // console.log(dat);
   } 
+)
+watch(
+  () => props.online,
+  (value) => {
+    setOnlineStatus(value)
+  }
 )
 </script>
 
@@ -114,16 +120,18 @@ watch(
     align-items: center;
     &.left-module {
       padding-right: 5px;
+      text-align: center;
       .icon-bage {
         background: rgb(81, 139, 254);
         height: 18px;
+        line-height: 18px;
         padding: 1px 3px;
         font-size: 10px;
         color: #fff;
         border-radius: 3px;
-        margin-left: 8px;
+        margin-right: 8px;
         flex-shrink: 0;
-        &.red {
+        &.red-color {
           background: #f97348 !important;
         }
       }
@@ -131,6 +139,7 @@ watch(
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        margin-right: 8px;
       }
     }
     &.center-module {

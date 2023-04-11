@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-02-28 21:49:41
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-03-29 23:33:13
+ * @LastEditTime: 2023-04-03 11:12:08
  * @FilePath: \LCMIM\TIM-IM\timim\src\views\message\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -132,7 +132,7 @@
             <welcome-module v-if="false"></welcome-module>
             <talk-panel 
               :params="params"
-              
+              :is-online="isFriendOnline"
             ></talk-panel>
           </el-main>
         </el-container>
@@ -146,7 +146,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, nextTick, computed } from "vue";
+import { ref, onMounted, reactive, nextTick, computed, toRaw, onUnmounted, watch, watchEffect } from "vue";
 import MainLayout from "@/views/layout/MainLayout";
 import WelcomeModule from "@/components/layout/WelcomeModule"
 import uTime from "./uTime.vue";
@@ -232,9 +232,12 @@ const subheaderPx = computed(() => {
 })
 //当前对话好友在线状态
 const isFriendOnline = computed(() => {
-  let index = findTalkIndex(index_name)
-  return index >= 0 && talksCom.value[index].is_online === "在线"
+  let index = findTalkIndex(index_name.value)
+  return index >= 0 && talksCom.value.value[index].is_online === 1
 })
+const subHeaderShadow = ref(false)
+const menusScrollbar = ref(null)
+onMounted(() => scrollEvent())
 //切换聊天面板
 const clickTab = (index_name) => {
   let index = findTalkIndex(index_name)
@@ -248,15 +251,48 @@ const clickTab = (index_name) => {
     nickname,
     // is_robot: item.is_robot
   }
-  console.log(params);
+  //
   store.dialogue.UPDATE_DIALOGUE_MESSAGE(params)
   nextTick(() => {
     //提交事件，更新聊天面板
     // if (index_name === topItems.index_name) {
-      
     // }
   })
 }
+//监听自定义滚动条事件
+const scrollEvent = () => {
+  console.log(menusScrollbar);
+  let scrollbarEl = menusScrollbar.value.wrapRef
+  scrollbarEl.onscroll = () => {
+    subHeaderShadow.value = scrollbarEl.scrollTop > 0
+  }
+}
+//清除当前对话
+const cleaTalk = () => {
+  params = {
+    talk_type: 0,
+    receiver_id: 0,
+    nickname: ""
+  }
+  console.log("清除当前对话" + params);
+  store.dialogue.UPDATE_DIALOGUE_MESSAGE(params)
+}
+// 消息未读数计时器
+const interval = ref(null)
+//监听未读消息数
+watch(unreadNumCom, (value) => {
+  clearInterval(interval.value)
+  if (value > 0) {
+    interval.title = setInterval(() => {
+      document.title = document.title === title ? `[新消息]${title}` : title
+    }, 2000)
+  } else {
+    document.title = title
+  }
+})
+onUnmounted(() => {
+  cleaTalk()
+})
 </script>
 
 <style lang="scss" scoped>
