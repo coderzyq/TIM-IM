@@ -3,8 +3,8 @@
     <el-container>
       <!-- 聊天面板头部 -->
       <panel-header
-        :data="loadChatRecords()"
-        :online="talkProps.isOnline"
+        :data="params"
+        :online="isOnline"
       ></panel-header>
       <!-- 聊天信息内容面板 -->
       <el-main class="main-box no-padding">
@@ -22,6 +22,7 @@
             </span>
             <span v-else>没有更多消息了...</span>
           </div>
+          <text-message :arrow="true"></text-message>
           <!-- 消息主体 -->
           <div v-for="(item, idx) in records" :key="item.id">
             <!-- 群消息 -->
@@ -114,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, watchEffect } from "vue";
+import { ref, reactive, watch, computed, watchEffect, onMounted } from "vue";
 import PanelHeader from "./PanelHeader.vue";
 import MeEdit from "@/components/editor/MeEdit.vue";
 import TextMessage from "@/components/chat/message/TextMessage.vue";
@@ -199,15 +200,10 @@ const onKeyboardEvent = (content) => {
   console.log(time);
   keyboardEvent.time = time;
 };
-//判断用户在线离线情况
-watchEffect(
-  // () => loadChatRecords()
-  () => talkProps.params
-);
-watch(
-  () => talkProps.isOnline,
-  (value) => {}
-);
+
+onMounted(() => {
+  loadChatRecords()
+})
 </script>
 
 <style lang="scss" scoped>

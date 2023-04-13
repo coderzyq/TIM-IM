@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-05 18:05:42
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-04-02 15:32:26
+ * @LastEditTime: 2023-04-13 21:20:26
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\chat\panel\PanelHeader.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,7 +11,7 @@
     <div class="module left-module">
       <span
         class="icon-bage"
-        :class="{ 'red-color': params.talk_type === 1 }"
+        :class="{ 'red-color': params.talk_type == 1 }"
         v-show="params.is_robot === 0"
       >
         {{ params.talk_type == 1 ? "好友" : "群组" }}
@@ -20,7 +20,7 @@
       <span class="num" v-show="isOnline">({{ groupNum }})</span>
     </div>
     <div
-      v-show="(params.talk_type === 1) & (params.is_robot === 0)"
+      v-show="params.talk_type === 1"
       class="module center-module"
     >
       <p class="online">
@@ -74,7 +74,7 @@ const props = defineProps({
   },
   online: {
     type: Boolean,
-    default: false
+    default: true
   }
 });
 const params = reactive({
@@ -90,19 +90,29 @@ const groupNum = ref(1);
 //设置配置数据
 const setParamsData = (object) => {Object.assign(params, object)}
 //监听用户是否在线？
-const setOnlineStatus = (value) => isOnline.value = value
-watch(
-  () => props.data,
-  (value) => {
-    setParamsData(value)
-    // console.log(dat);
-  } 
-)
+// const setOnlineStatus = (value) => isOnline.value = value
+// watch(
+//   [() => props.online, () => props.data],
+//   ([value, lod], [value1, lo]) => {
+//     console.log(value);
+//     console.log(value1);
+//     isOnline.value = value
+//     setParamsData(value1)
+//     // console.log(value1);
+//     console.log(setParamsData(value1));
+//     // console.log(isOnline.value);
+//     // console.log(value);
+//   },
+//   {immediate: true}
+// )
 watch(
   () => props.online,
   (value) => {
-    setOnlineStatus(value)
-  }
+    isOnline.value = value
+    // console.log(isOnline.value);
+    // console.log(value);
+  },
+  {immediate: true}
 )
 </script>
 
