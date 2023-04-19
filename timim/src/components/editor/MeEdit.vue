@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-06 22:43:07
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-04-10 23:03:41
+ * @LastEditTime: 2023-04-19 00:05:52
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\editor\MeEdit.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -127,6 +127,7 @@ const keydownEvent = (e) => {
   if(e.keyCode === 13) {
   // if(e.keyCode === 13 && e.shiftKey === false && editorText.value === '') {
     let currentTime = new Date().getTime()
+    console.log(currentTime);
     if(sendtime.value > 0) {
       //判断1秒内只能发一条消息
       if(currentTime - sendtime.value < interval.value) {

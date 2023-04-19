@@ -106,8 +106,8 @@ const useTalkSotre = defineStore("talkId", {
         },
         //更新呢对话节点
         UPDATE_TALK_ITEM(resource) {
-            console.log(this.items);
-            console.log(resource);
+            // console.log(this.items);
+            // console.log(resource);
             for (const iterator of this.items) {
                 if (iterator.index_name === resource.index_name) {
                     Object.assign(iterator, resource)

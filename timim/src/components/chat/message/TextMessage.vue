@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-04-11 20:17:00
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-04-14 00:07:38
+ * @LastEditTime: 2023-04-19 23:41:42
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\chat\message\TextMessage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,19 +12,19 @@
         :class="{
             left: float == 'left',
             right: float == 'right',
-            'max-width': !fullWidth
+            // 'max-width': !fullWidth
         }"
     >
-        <div class="arrow" v-if="arrow">111</div>
-        <pre v-html="htmlData"></pre>
+        <div class="arrow" v-if="arrow"></div>
+        <pre>{{ htmlData }}</pre>
     </div>
 </template>
 
 <script setup>
-import {onBeforeMount, ref} from 'vue';
-const props = defineEmits({
+import {onBeforeMount, onMounted, onUpdated, ref, watch} from 'vue';
+const props = defineProps({
     content: {
-        type: [String, Number],
+        type: String,
         default: ''
     },
     float: {
@@ -40,11 +40,31 @@ const props = defineEmits({
         default: true
     }
 })
-const htmlData = ref("2222");
-onBeforeMount(() => {
-    const text = null;
-    htmlData.value
-})
+const float = ref('right')
+const arrow = ref(false)
+const htmlData = ref("111");
+// onUpdated(() => {
+//     console.log(props.content);
+//     htmlData.value = props.content
+// })
+console.log(props.content);
+watch(
+    () => props.content,
+    (value) => {
+        console.log(value);
+        htmlData.value = value
+    }
+)
+console.log(htmlData.value);
+// onBeforeMount(() => {
+//     // const text = null;
+//     console.log(props.content);
+//     htmlData.value = props.content
+//     console.log(htmlData.value);
+// })
+// onMounted(() => {
+//     htmlData.value = props.content
+// })
 </script>
 
 <style lang="less" scoped>
@@ -57,6 +77,7 @@ onBeforeMount(() => {
     min-height: 30px;
     border-radius: 5px;
     padding: 5px;
+    background-color: green;
     .arrow {
         position: absolute;
         width: 10;
@@ -65,6 +86,7 @@ onBeforeMount(() => {
         border: 5px solid;
         top: 6px;
         left: -10px;
+        
     }
     &.max-width {
         max-width: calc(100% - 50px);

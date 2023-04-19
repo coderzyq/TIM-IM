@@ -2,7 +2,7 @@
  * @Author: zhang-yong-qiang 1094093944@qq.com
  * @Date: 2023-03-05 18:05:42
  * @LastEditors: zhang-yong-qiang 1094093944@qq.com
- * @LastEditTime: 2023-04-13 21:20:26
+ * @LastEditTime: 2023-04-20 00:53:35
  * @FilePath: \LCMIM\TIM-IM\timim\src\components\chat\panel\PanelHeader.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -19,43 +19,40 @@
       <span class="nickname">{{ params.nickname }}</span>
       <span class="num" v-show="isOnline">({{ groupNum }})</span>
     </div>
-    <div
-      v-show="params.talk_type === 1"
-      class="module center-module"
-    >
+    <div v-show="params.talk_type === 1" class="module center-module">
       <p class="online">
         <span class="online-status" v-show="isOnline"></span>
-        <span>{{ isOnline ? "在线" : "离线" }}</span>
+        <span>{{在线}}</span>
       </p>
       <p class="keyboard-status" v-show="isKeyboard">对方正在输入...</p>
     </div>
     <div class="module right-module">
-        <el-popover
-            placement="top-start"
-            :width="200"
-            trigger="hover"
-            content="历史消息"
-        >
-            <template #reference>
-                <el-button class="m-2">Hover to activate</el-button>
-            </template>
-        </el-popover>
-        <el-tooltip content="群公告" placement="bottom-end">
-            <p v-show="params.talk_type == 2">
-                <i class="iconfont icon-gonggao2" />
-            </p>
-        </el-tooltip>
-        <el-tooltip content="群设置" placement="bottom-end">
-            <p v-show="params.talk_type == 2">
-                <i class="el-icon-setting" />
-            </p>
-        </el-tooltip>
+      <el-popover
+        placement="top-start"
+        :width="200"
+        trigger="hover"
+        content="历史消息"
+      >
+        <template #reference>
+          <el-button class="m-2">Hover to activate</el-button>
+        </template>
+      </el-popover>
+      <el-tooltip content="群公告" placement="bottom-end">
+        <p v-show="params.talk_type == 2">
+          <i class="iconfont icon-gonggao2" />
+        </p>
+      </el-tooltip>
+      <el-tooltip content="群设置" placement="bottom-end">
+        <p v-show="params.talk_type == 2">
+          <i class="el-icon-setting" />
+        </p>
+      </el-tooltip>
     </div>
   </el-header>
 </template>
 
 <script setup>
-import { reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 const props = defineProps({
   keyboard: {
     type: [Boolean, Number],
@@ -74,8 +71,10 @@ const props = defineProps({
   },
   online: {
     type: Boolean,
-    default: true
-  }
+    default: () => {
+      return true;
+    },
+  },
 });
 const params = reactive({
   is_robot: 0,
@@ -84,11 +83,22 @@ const params = reactive({
   params: 0,
   nickname: "jisoo",
 });
-const isOnline = ref(false);
+let isOn = ref(false)
+const isOnline = computed({
+  get: () => {
+    return isOn.value
+  },
+  set: (value) => {
+    console.log(value);
+    isOn.value = value
+  }
+});
 const isKeyboard = ref(false);
 const groupNum = ref(1);
 //设置配置数据
-const setParamsData = (object) => {Object.assign(params, object)}
+const setParamsData = (object) => {
+  Object.assign(params, object);
+};
 //监听用户是否在线？
 // const setOnlineStatus = (value) => isOnline.value = value
 // watch(
@@ -105,15 +115,60 @@ const setParamsData = (object) => {Object.assign(params, object)}
 //   },
 //   {immediate: true}
 // )
+// watch(
+//   () => props.data,
+//   (value) => {
+//     console.log(value);
+//     debugger;
+//     // console.log(value1);
+//     // isOnline.value = value1
+//     params.nickname = value.nickname;
+//     params.talk_type = value.talk_type;
+
+//     // console.log(isOnline.value);
+//     // console.log(value);
+//   },
+//   { immediate: true }
+// );
+// watch(
+//   () => props.online,
+//   (value) => {
+//     debugger;
+//     console.log(value);
+//     debugger;
+
+//     // console.log(value1);
+//     isOnline.value = value;
+//     console.log(isOnline.value);
+//     // params.nickname = value.nickname
+//     // params.talk_type = value.talk_type
+
+//     // console.log(isOnline.value);
+//     // console.log(value);
+//   },
+//   { immediate: true }
+// );
 watch(
-  () => props.online,
-  (value) => {
-    isOnline.value = value
-    // console.log(isOnline.value);
-    // console.log(value);
-  },
-  {immediate: true}
-)
+  [() => props.data, () => props.online],
+  // [
+    (value) => {
+      debugger;
+      console.log(value);
+      debugger;
+      params.nickname = value[0].nickname;
+      params.talk_type = value[0].talk_type;
+      isOnline.value = value[1];
+      console.log(isOnline.value);
+    },
+  //   (value) => {
+  //     debugger;
+  //     console.log(value[1]);
+  //     debugger;
+  //     isOnline.value = value[1];
+  //     console.log(isOnline.value);
+  //   },
+  // ]
+);
 </script>
 
 <style lang="scss" scoped>

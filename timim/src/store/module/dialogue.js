@@ -25,6 +25,7 @@ const useDialogueStore = defineStore("dialogueId", {
     actions: {
         UPDATE_DIALOGUE_MESSAGE(resource) {
             this.records = []
+            console.log(resource);
             this.talk_type = parseInt(resource.talk_type)
             this.receiver_id = parseInt(resource.receiver_id)
             this.nickname = resource.nickname

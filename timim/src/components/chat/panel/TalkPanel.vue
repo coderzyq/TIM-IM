@@ -2,10 +2,7 @@
   <el-container class="ov-hidden full-height">
     <el-container>
       <!-- 聊天面板头部 -->
-      <panel-header
-        :data="params"
-        :online="isOnline"
-      ></panel-header>
+      <panel-header :data="talkProps.params" :online="isOnline"></panel-header>
       <!-- 聊天信息内容面板 -->
       <el-main class="main-box no-padding">
         <div id="weChatPanel" class="talks-container wechatScrollbar">
@@ -22,13 +19,15 @@
             </span>
             <span v-else>没有更多消息了...</span>
           </div>
-          <text-message :arrow="true"></text-message>
+          <text-message :arrow="true" :content="contentCom"></text-message>
           <!-- 消息主体 -->
-          <div v-for="(item, idx) in records" :key="item.id">
-            <!-- 群消息 -->
-            <!-- 撤回消息 -->
-            <!-- 其它对话消息 -->
-            <div
+          <!-- <div v-for="(item, idx) in records" :key="item.id"> -->
+          <!-- 
+            <div v-for="(item, idx) in records" :key="item.id">
+             群消息 -->
+          <!-- 撤回消息 -->
+          <!-- 其它对话消息 -->
+          <!-- <div
               class="message-box record-box"
               :class="{
                 'direction-rt': item.float === 'right',
@@ -42,14 +41,14 @@
                   @click="triggerMultiSelect(item.id)"
                 ></i>
               </aside>
-              <aside class="avator-column">
-                <!-- <el-avator
+              <aside class="avator-column"> -->
+          <!-- <el-avator
                       class="pointer"
                       :size="30"
                       :src="item.avator"
                       @click.native="catFriendDetail(item.user_id)"
                     ></el-avator> -->
-              </aside>
+          <!-- </aside>
               <main class="main-column">
                 <div class="talk-title">
                   <span
@@ -59,45 +58,45 @@
                     "
                     class="time"
                   >
-                    时间
-                    <!-- <i class="el-icon-time"></i>
+                    时间 -->
+          <!-- <i class="el-icon-time"></i>
                       {{ parseTime(item.created_at, '{m}月{d}日{h}:{i}') }} -->
-                  </span>
-                </div>
-                <div class="talk-content">
+          <!-- </span>
+                </div> -->
+          <!-- <div class="talk-content">
                   <span
                     class="nickname"
                     v-show="params.talk_type === 2 && item.float === 'left'"
-                    >时间
-                    <!-- {{ item.friend_remarks || item.nickname }}
+                    >时间 -->
+          <!-- {{ item.friend_remarks || item.nickname }}
                       {{ parseTime(item.created_at, '{m}月{d}日{h}:{i}') }} -->
-                  </span>
-                  <!-- 文本消息 -->
-                  <text-message
-                    v-if="item.msg_type == 1"
+          <!-- </span> -->
+          <!-- 文本消息 -->
+          <!-- <text-message
+                    v-if="true"
                     :content="item.content"
                     :float="item.float"
                     :full-width="false"
                     :arrow="true"
                     @contextmenu.native="onCopy(idx, item, $event)"
-                  ></text-message>
-                  <!-- 图片消息 -->
-                  <!-- 音频文件预留 -->
-                  <!-- 视频文件预留 -->
-                  <!-- 文件消息 -->
-                  <!-- 会话记录消息 -->
-                  <!-- 代码块消息 -->
-                  <!-- 投票消息 -->
-                  <!-- 登录消息 -->
-                  <!-- 位置消息 -->
-                  <!-- 未知消息 -->
-                  <!-- 消息引用（预留） -->
-                </div>
-              </main>
-            </div>
-            <!-- 消息时间 -->
-            <div></div>
-          </div>
+                  ></text-message> -->
+          <!-- 图片消息 -->
+          <!-- 音频文件预留 -->
+          <!-- 视频文件预留 -->
+          <!-- 文件消息 -->
+          <!-- 会话记录消息 -->
+          <!-- 代码块消息 -->
+          <!-- 投票消息 -->
+          <!-- 登录消息 -->
+          <!-- 位置消息 -->
+          <!-- 未知消息 -->
+          <!-- 消息引用（预留） -->
+          <!-- </div> -->
+          <!-- </main> -->
+          <!-- </div> -->
+          <!-- 消息时间 -->
+          <!-- <div></div> -->
+          <!-- </div> -->
         </div>
       </el-main>
       <!-- 页脚信息 -->
@@ -173,12 +172,31 @@ const loadChatRecords = () => ({
 });
 const talkStore = useTalkSotre();
 
+//回车键发送消息回调事件
+const content = ref("")
+const conta = ref("")
+const contentCom = computed({
+  get: () => {
+    return content.value
+  },
+  set: (cont) => {
+    content.value  = cont   
+    console.log(cont);
+    console.log(content.value, "233");
+  }
+})
+console.log(content.value);
 const submitSendMessage = (content) => {
   console.log(content);
-  talkStore.UPDATE_TALK_ITEM({
-    index_name: index_name.value,
-    draft_text: nicknameCom.value,
-  });
+  console.log(2222);
+  // console.log("发送的", content);
+  // conta.value = content
+  contentCom.value = content
+  // console.log(conta.value, "content");
+  // talkStore.UPDATE_TALK_ITEM({
+  //   index_name: index_name.value,
+  //   draft_text: content.value,
+  // });
 };
 
 //推送编辑事件消息
@@ -202,8 +220,8 @@ const onKeyboardEvent = (content) => {
 };
 
 onMounted(() => {
-  loadChatRecords()
-})
+  loadChatRecords();
+});
 </script>
 
 <style lang="scss" scoped>
